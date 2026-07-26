@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 29th Birthday! 🍻</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            padding: 20px;
+            animation: fadeIn 1s forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Buttons */
+        button {
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #555;
+            transform: scale(1.05);
+        }
+
+        /* Screen 2: Bar Setup */
+        .bar-table {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 30px;
+            margin-top: 50px;
+            height: 200px;
+        }
+
+        /* The Glass */
+        .glass-container {
+            position: relative;
+            width: 100px;
+            height: 150px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background-color: transparent;
+            transition: height 0.5s ease-in-out;
+            z-index: 1;
+        }
+
+        .glass-inner {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            z-index: 2;
+            font-size: 25px;
+        }
+
+        /* Ice & Bottle */
+        .ice-cubes {
+            display: flex;
+            gap: 15px;
+            font-size: 35px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .ice {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ice:hover { transform: scale(1.2); }
+
+        .bottle {
+            font-size: 80px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform-origin: bottom center;
+        }
+
+        .bottle.tilt {
+            transform: rotate(-45deg) translateY(-20px);
+        }
+
+        /* Screen 3: Drunk Walk */
+        .drunk-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .drunk-guy {
+            position: absolute;
+            top: 50%;
+            left: -50px;
+            font-size: 80px;
+            transform: translateY(-50%);
+            animation: staggerWalk 6s linear forwards;
+        }
+
+        @keyframes staggerWalk {
+            0% { left: -50px; transform: translateY(-50%) rotate(0deg); }
+            20% { left: 20%; transform: translateY(-60%) rotate(20deg); }
+            40% { left: 40%; transform: translateY(-40%) rotate(-15deg); }
+            60% { left: 60%; transform: translateY(-55%) rotate(25deg); }
+            80% { left: 80%; transform: translateY(-45%) rotate(-20deg); }
+            100% { left: 110%; transform: translateY(-50%) rotate(40deg); }
+        }
+
+        /* Screen 4: Spotlight Finale */
+        .spotlight-screen {
+            background: black;
+            position: relative;
+        }
+        
+        .spotlight {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, black 100%);
+            opacity: 1;
+            transition: background 2s ease, opacity 2s ease;
+            z-index: 10;
+            pointer-events: none; /* ဒီနေရာမှာ ထည့်ပေးလိုက်ပါပြီ (ကလစ်တွေကို ဖောက်ထွင်းသွားစေပါတယ်) */
+        }
+
+        .spotlight.on {
+            background: radial-gradient(circle at center, transparent 30%, black 80%);
+        }
+
+        .finale-content {
+            position: relative;
+            z-index: 15; /* ခလုတ်နှိပ်လို့ရအောင် အပေါ်ဆုံးသို့ ပို့လိုက်ပါပြီ */
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 2s ease;
+        }
+
+        .finale-content.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .crowd {
+            font-size: 40px;
+            margin-top: 20px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Screen 1: Choose Drink -->
+    <div id="screen1" class="screen active">
+        <h2 style="color: #ffd700;">Happy 29th Birthday! 🎉</h2>
+        <p style="margin-bottom: 30px; font-size: 20px;">ဒီနေ့မွေးနေ့အတွက် ဘာသောက်မလဲ?</p>
+        <button onclick="chooseDrink('beer', '#FFD700', '🍺')">ဘီယာ (Beer) 🍺</button>
+        <button onclick="chooseDrink('whisky', '#d97b14', '🥃')">ဝီစကီ (Whisky) 🥃</button>
+        <button onclick="chooseDrink('cognac', '#8c3a00', '🍾')">ကော်ညက် (Cognac) 🍾</button>
+    </div>
+
+    <!-- Screen 2: Prepare Drink -->
+    <div id="screen2" class="screen">
+        <h2>အရင်ဆုံး ရေခဲထည့်ပါ 🧊<br>ပြီးရင် ပုလင်းကိုနှိပ်ပြီး အရက်ငှဲ့ပါ</h2>
+        
+        <div class="ice-cubes" id="iceCubesBox">
+            <div class="ice" onclick="dropIce(this)">🧊</div>
+            <div class="ice" onclick="dropIce(this)">🧊</div>
+            <div class="ice" onclick="dropIce(this)">🧊</div>
+        </div>
+
+        <div class="bar-table">
+            <div class="glass-container">
+                <div class="liquid" id="liquid"></div>
+                <div class="glass-inner" id="glassInner"></div>
+            </div>
+            
+            <div class="bottle" id="bottleEmoji" onclick="pourDrink()">🍾</div>
+        </div>
+
+        <button id="drinkBtn" class="hidden" onclick="drinkIt()" style="margin-top: 40px; background: #28a745;">သောက်မယ်! 🤤</button>
+    </div>
+
+    <!-- Screen 3: Drunk Walk -->
+    <div id="screen3" class="screen">
+        <div class="drunk-container">
+            <h2 style="position: absolute; top: 20%; width: 100%; text-align: center; color: red;">မူးသွားပြီ... 😵‍💫🥴</h2>
+            <div class="drunk-guy">🚶‍♂️💨</div>
+        </div>
+    </div>
+
+    <!-- Screen 4: Spotlight Finale -->
+    <div id="screen4" class="screen spotlight-screen">
+        <div class="spotlight" id="spotlight"></div>
+        <div class="finale-content" id="finaleContent">
+            <h1 style="font-size: 50px; color: #ffeb3b; text-shadow: 0 0 20px #ff9800;">Happy 29th Birthday! 🥳🎂</h1>
+            <p style="font-size: 20px;">ပျော်ရွှင်စရာ မွေးနေ့လေးဖြစ်ပါစေ ညေးဇင်! 🍻</p>
+            <div class="crowd">
+                👯‍♂️ 🕺 💃 🍻 👯‍♀️ 🥳 🎁
+            </div>
+            <br>
+            <button onclick="location.reload()" style="background: #333; border: 1px solid white;">နောက်တစ်ခွက် ထပ်သောက်မယ် 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedColor = "";
+        let iceCount = 0;
+        let fillLevel = 0;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function chooseDrink(type, color, emoji) {
+            selectedColor = color;
+            document.getElementById('bottleEmoji').innerText = type === 'beer' ? '🍺' : '🍾';
+            document.getElementById('liquid').style.backgroundColor = color;
+            showScreen('screen2');
+        }
+
+        function dropIce(element) {
+            element.style.visibility = 'hidden'; 
+            document.getElementById('glassInner').innerHTML += '🧊'; 
+            iceCount++;
+            if(iceCount === 3) {
+                document.getElementById('iceCubesBox').style.display = 'none';
+            }
+        }
+
+        function pourDrink() {
+            if (iceCount < 3) {
+                alert("ရေခဲ ၃ တုံးအရင်ထည့်ပါဦး! 🧊");
+                return;
+            }
+            if (fillLevel >= 100) return;
+
+            let bottle = document.getElementById('bottleEmoji');
+            bottle.classList.add('tilt');
+            
+            fillLevel += 34; 
+            document.getElementById('liquid').style.height = fillLevel + '%';
+
+            setTimeout(() => {
+                bottle.classList.remove('tilt');
+            }, 300);
+
+            if (fillLevel >= 100) {
+                document.getElementById('drinkBtn').classList.remove('hidden');
+            }
+        }
+
+        function drinkIt() {
+            showScreen('screen3');
+            
+            setTimeout(() => {
+                showScreen('screen4');
+                triggerSpotlight();
+            }, 6000);
+        }
+
+        function triggerSpotlight() {
+            setTimeout(() => {
+                document.getElementById('spotlight').classList.add('on');
+                document.getElementById('finaleContent').classList.add('show');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
